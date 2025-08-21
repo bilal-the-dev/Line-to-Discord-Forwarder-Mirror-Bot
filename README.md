@@ -5,7 +5,7 @@ A bot that **mirrors messages** between Discord channels and Line – including 
 An example of mirrored messages on both platforms.
 
 ![discord](https://github.com/bilal-the-dev/Line-to-Discord-Forwarder-Mirror-Bot/blob/master/discord.PNG?raw=true)
-![line](https://github.com/bilal-the-dev/Line-to-Discord-Forwarder-Mirror-Bot/blob/master/line.WEBP?raw=true)
+![line](https://github.com/bilal-the-dev/Line-to-Discord-Forwarder-Mirror-Bot/blob/master/line.webp?raw=true)
 
 ## 🚀 Features
 
