@@ -53,49 +53,60 @@ export const sendMessageOnLine = async (
 ) => {
   const messagesToSend: any[] = [];
 
+  const textMessageHeader = {
+    type: "text",
+    text: `${message.author.displayName}:`,
+  };
+
   // Include the cleaned text message if it exists
   if (message.content.trim()) {
-    messagesToSend.push({
-      type: "text",
-      text: `${message.author.displayName}: ${message.content}`,
-    });
+    messagesToSend.push([
+      {
+        type: "text",
+        text: `${message.author.displayName}: ${message.content}`,
+      },
+    ]);
   }
 
   // Get up to 4 image/video attachments
-  const mediaAttachments = Array.from(message.attachments.values())
-    .filter((attachment) => {
+  const mediaAttachments = Array.from(message.attachments.values()).filter(
+    (attachment) => {
       const contentType = attachment.contentType || "";
       return (
         contentType.startsWith("image/") || contentType.startsWith("video/")
       );
-    })
-    .slice(0, 5); // limit to 4
+    }
+  );
 
   for (const attachment of mediaAttachments) {
     const contentType = attachment.contentType || "";
 
     if (contentType.startsWith("image/")) {
-      messagesToSend.push({
-        type: "image",
-        originalContentUrl: attachment.url,
-        previewImageUrl: attachment.url,
-      });
+      messagesToSend.push([
+        textMessageHeader,
+        {
+          type: "image",
+          originalContentUrl: attachment.url,
+          previewImageUrl: attachment.url,
+        },
+      ]);
     } else if (contentType.startsWith("video/")) {
-      messagesToSend.push({
-        type: "video",
-        originalContentUrl: attachment.url,
-        previewImageUrl: attachment.url,
-      });
+      messagesToSend.push([
+        textMessageHeader,
+        {
+          type: "video",
+          originalContentUrl: attachment.url,
+          previewImageUrl: attachment.url,
+        },
+      ]);
     }
   }
 
-  if (messagesToSend.length > 5) messagesToSend.splice(4); // if text and 4+ media then remove last media
-
   // Push the message(s) to LINE
-  if (messagesToSend.length > 0) {
+  for (const messageArrayToSend of messagesToSend) {
     await retryLinePushMessage({
       to: relayConfig.lineChannelId,
-      messages: messagesToSend,
+      messages: messageArrayToSend,
     });
   }
 };
